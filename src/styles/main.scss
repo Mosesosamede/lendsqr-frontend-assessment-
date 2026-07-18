@@ -1,0 +1,25 @@
+// SCSS 7-1 Architecture Setup
+
+// Abstracts
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
+@import 'abstracts/functions';
+
+// Base
+@import 'base/reset';
+@import 'base/typography';
+
+// Layout
+@import 'layout/container';
+@import 'layout/header';
+@import 'layout/sidebar';
+
+// Components
+@import 'components/stat-cards';
+@import 'components/table';
+@import 'components/filters';
+
+// Pages
+@import 'pages/login';
+@import 'pages/dashboard';
+@import 'pages/user-detail';

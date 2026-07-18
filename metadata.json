@@ -1,0 +1,6 @@
+{
+  "name": "Lendsqr Frontend Assessment",
+  "description": "A production-quality frontend engineering assessment for Lendsqr, featuring a modular React architecture, SCSS 7-1 styling, and comprehensive testing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

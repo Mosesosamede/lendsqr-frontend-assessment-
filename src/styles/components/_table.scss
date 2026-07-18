@@ -1,0 +1,190 @@
+.table-container {
+  background-color: $white;
+  border: 1px solid rgba(33, 63, 125, 0.06);
+  border-radius: 4px;
+  box-shadow: 3px 5px 20px 0 rgba(0,0,0,0.04);
+  padding: 2rem 1rem;
+  overflow-x: auto;
+  
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(33, 63, 125, 0.1);
+    border-radius: 10px;
+  }
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+  min-width: 800px;
+  min-height: 640px;
+  opacity: 1;
+  border-width: 1px;
+
+  th {
+    position: relative; // Important for absolute positioned FilterPopup
+    text-align: left;
+    padding: 1rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: $secondary-color;
+    
+    .header-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+  }
+
+  td {
+    padding: 1.25rem 0.5rem;
+    border-bottom: 1px solid rgba(33, 63, 125, 0.1);
+    font-size: 0.875rem;
+    color: $text-color;
+    white-space: nowrap;
+  }
+
+  .status-pill {
+    padding: 0.4rem 0.8rem;
+    border-radius: 100px;
+    font-size: 0.875rem;
+    font-weight: 400;
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+  }
+
+  .status-active { background-color: rgba(57, 205, 98, 0.06); color: #39CD62; }
+  .status-inactive { background-color: rgba(84, 95, 125, 0.06); color: #545F7D; }
+  .status-pending { background-color: rgba(233, 178, 0, 0.1); color: #E9B200; }
+  .status-blacklisted { background-color: rgba(228, 3, 59, 0.1); color: #E4033B; }
+
+  .actions-cell {
+    text-align: right;
+    position: relative;
+    .action-btn { 
+      color: $text-color; 
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      &:hover { background-color: rgba(33, 63, 125, 0.05); }
+    }
+  }
+}
+
+.action-menu {
+  position: absolute;
+  top: 70%;
+  right: 1rem;
+  width: 180px;
+  background-color: $white;
+  border: 1px solid rgba(84, 95, 125, 0.14);
+  box-shadow: 3px 5px 20px rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  padding: 0.5rem 0;
+  z-index: 110;
+
+  @include respond-to('mobile') {
+    right: 0.5rem;
+    width: 160px;
+  }
+
+  .menu-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    color: $secondary-color;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(33, 63, 125, 0.05);
+    }
+
+    svg {
+      color: $secondary-color;
+      opacity: 0.7;
+    }
+  }
+}
+
+.pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding: 0 1rem;
+  gap: 1.5rem;
+  
+  @include respond-to('tablet') { 
+    flex-direction: column; 
+    align-items: center;
+    text-align: center;
+  }
+
+  .showing-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: $text-color;
+    font-size: 0.875rem;
+    @include respond-to('mobile') { flex-wrap: wrap; justify-content: center; }
+
+    select {
+      padding: 0.4rem 0.6rem;
+      border-radius: 4px;
+      border: none;
+      background-color: rgba(33, 63, 125, 0.1);
+      color: $secondary-color;
+      font-weight: 500;
+      cursor: pointer;
+    }
+  }
+
+  .pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .page-btn {
+      width: 32px;
+      height: 32px;
+      @include flex-center;
+      border-radius: 4px;
+      font-size: 1rem;
+      color: $text-color;
+      opacity: 0.6;
+      transition: all 0.2s;
+      
+      &.active {
+        opacity: 1;
+        font-weight: 500;
+      }
+      
+      &.prev, &.next { 
+        background-color: rgba(33, 63, 125, 0.1);
+        opacity: 1;
+        
+        &.disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+      }
+
+      &:hover:not(.disabled) {
+        opacity: 1;
+        background-color: rgba(33, 63, 125, 0.05);
+      }
+    }
+    
+    .dots { color: $text-color; opacity: 0.6; }
+  }
+}

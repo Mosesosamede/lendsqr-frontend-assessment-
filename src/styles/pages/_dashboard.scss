@@ -1,0 +1,13 @@
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: $secondary-color;
+  margin-bottom: 2.5rem;
+}
+
+.dashboard-content {
+  width: 100%;
+  @include respond-to('mobile') {
+    padding-top: 0.5rem;
+  }
+}

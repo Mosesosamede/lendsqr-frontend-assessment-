@@ -1,0 +1,210 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+.filter-popup {
+  position: absolute;
+  top: calc(100% + 8px); // Dynamically floating right below the header cell
+  left: 0;
+  width: 310px;
+  height: auto;
+  background-color: $white;
+  border: 1px solid rgba(84, 95, 125, 0.14);
+  box-shadow: 0px 14px 40px rgba(84, 95, 125, 0.15); // High fidelity soft drop shadow
+  border-radius: 4px;
+  padding: 30px 20px;
+  z-index: 200;
+  font-family: $font-family-main;
+  text-transform: none; // Restores normal text case inside form fields
+
+  &.align-right {
+    left: auto;
+    right: 0;
+  }
+
+  @include respond-to('mobile') {
+    width: 280px;
+    padding: 20px 15px;
+    left: -20px; // Shift slightly on small devices to prevent overflow
+    &.align-right {
+      left: auto;
+      right: -10px;
+    }
+  }
+
+  .filter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+      width: 100%;
+
+      label {
+        font-size: 14px;
+        font-weight: 500;
+        color: $text-color;
+        text-align: left;
+        display: block;
+      }
+
+      input {
+        width: 100%;
+        height: 40px;
+        padding: 0 12px;
+        border: 1px solid rgba(33, 63, 125, 0.15);
+        border-radius: 8px;
+        font-size: 14px;
+        color: $secondary-color;
+        background-color: $white;
+        transition: border-color 0.2s;
+        text-align: left;
+
+        &::placeholder {
+          color: rgba(84, 95, 125, 0.6);
+        }
+
+        &:focus {
+          border-color: $primary-color;
+          outline: none;
+        }
+
+        &.placeholder-style {
+          color: rgba(84, 95, 125, 0.6);
+        }
+      }
+
+      // Dropdown (Select) styling
+      .select-container {
+        position: relative;
+        width: 100%;
+
+        select {
+          width: 100%;
+          height: 40px;
+          padding: 0 35px 0 12px;
+          border: 1px solid rgba(33, 63, 125, 0.15);
+          border-radius: 8px;
+          font-size: 14px;
+          color: $secondary-color;
+          background-color: $white;
+          cursor: pointer;
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          transition: border-color 0.2s, color 0.2s;
+          text-align: left;
+
+          &:focus {
+            border-color: $primary-color;
+            outline: none;
+          }
+
+          &.placeholder-style {
+            color: rgba(84, 95, 125, 0.6);
+          }
+
+          option {
+            color: $secondary-color;
+            background-color: $white;
+          }
+        }
+
+        .select-chevron {
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          pointer-events: none;
+          color: $text-color;
+          opacity: 0.7;
+        }
+      }
+
+      // Datepicker styling
+      .date-container {
+        position: relative;
+        width: 100%;
+
+        input {
+          width: 100%;
+          height: 40px;
+          padding: 0 35px 0 12px;
+          cursor: pointer;
+
+          // Hide standard calendar picker icon in chrome/safari so we can use our own custom icon
+          &::-webkit-calendar-picker-indicator {
+            background: transparent;
+            bottom: 0;
+            color: transparent;
+            cursor: pointer;
+            height: auto;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: auto;
+            opacity: 0;
+            z-index: 2;
+          }
+        }
+
+        .date-icon {
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          pointer-events: none;
+          color: $text-color;
+          opacity: 0.7;
+          z-index: 1;
+        }
+      }
+    }
+
+    .filter-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 10px;
+
+      button {
+        width: 48%;
+        height: 40px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .reset-btn {
+        border: 1px solid $text-color;
+        color: $text-color;
+        background: transparent;
+
+        &:hover {
+          background-color: rgba(84, 95, 125, 0.05);
+          border-color: darken($text-color, 10%);
+          color: darken($text-color, 10%);
+        }
+      }
+
+      .submit-btn {
+        background-color: $primary-color;
+        border: 1px solid $primary-color;
+        color: $white;
+
+        &:hover {
+          background-color: darken($primary-color, 5%);
+          border-color: darken($primary-color, 5%);
+        }
+      }
+    }
+  }
+}
