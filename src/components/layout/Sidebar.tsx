@@ -1,22 +1,47 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import React from 'react';
-import { 
-  ChevronDown, 
-  Home,
-  UserCog,
-  ClipboardList,
-  X
-} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 interface SidebarIconProps {
   label: string;
 }
+
+const ChevronDownSvg: React.FC<{ size?: number; className?: string }> = ({ size = 14, className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '0.5rem', opacity: 0.7 }}
+  >
+    <path d="m6 9 6 6 6-6" />
+  </svg>
+);
+
+const XSvg: React.FC<{ size?: number; onClick?: () => void }> = ({ size = 24, onClick }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    onClick={onClick}
+    style={{ cursor: 'pointer', display: 'inline-block', verticalAlign: 'middle' }}
+  >
+    <path d="M18 6 6 18" />
+    <path d="m6 6 12 12" />
+  </svg>
+);
 
 const SidebarIcon: React.FC<SidebarIconProps> = ({ label }) => {
   // Normalize key to handle any subtle differences
@@ -25,83 +50,118 @@ const SidebarIcon: React.FC<SidebarIconProps> = ({ label }) => {
     .replace('accounts', 'account')
     .replace('pricings', 'pricing');
 
-  const config = React.useMemo(() => {
+  const filename = React.useMemo(() => {
     switch (normalizedLabel) {
       case 'switch organization':
-        return { src: '/assets/icons/briefcase 1.png', width: 16, height: 16, alt: 'Switch Organization' };
+        return 'briefcase 1.png';
       case 'dashboard':
-        return { icon: Home, width: 16, height: 14.22, alt: 'Dashboard' };
+        return 'home 1.png';
       case 'users':
-        return { src: '/assets/icons/user-friends 1.png', width: 16, height: 12.8, alt: 'Users' };
+        return 'user-friends 1.png';
       case 'guarantors':
-        return { src: '/assets/icons/users 1.png', width: 16, height: 12.8, alt: 'Guarantors' };
+        return 'users 1.png';
       case 'loans':
-        return { src: '/assets/icons/sack 1.png', width: 16, height: 16, alt: 'Loans' };
+        return 'sack 1.png';
       case 'decision models':
-        return { src: '/assets/icons/handshake-regular 1.png', width: 19, height: 15.2, alt: 'Decision Models' };
+        return 'handshake-regular 1.png';
       case 'savings':
-        return { src: '/assets/icons/piggy-bank 1.png', width: 16, height: 14.22, alt: 'Savings' };
+        return 'piggy-bank 1.png';
       case 'loan requests':
-        return { src: '/assets/icons/Group 104.png', width: 18, height: 22, alt: 'Loan Requests' };
+        return 'Group 104.png';
       case 'whitelist':
-        return { src: '/assets/icons/user-check 1.png', width: 16, height: 12.8, alt: 'Whitelist' };
+        return 'user-check 1.png';
       case 'karma':
-        return { src: '/assets/icons/user-times 1.png', width: 16, height: 12.8, alt: 'Karma' };
+        return 'user-times 1.png';
       case 'organization':
-        return { src: '/assets/icons/briefcase 1.png', width: 16, height: 16, alt: 'Organization' };
+        return 'briefcase 1.png';
       case 'loan products':
-        return { src: '/assets/icons/Group 104.png', width: 18, height: 22, alt: 'Loan Products' };
+        return 'Group 104.png';
       case 'savings products':
-        return { src: '/assets/icons/np_bank_148501_000000 1.png', width: 16, height: 16, alt: 'Savings Products' };
+        return 'np_bank_148501_000000 1.png';
       case 'fees and charges':
       case 'fees & charges':
-        return { src: '/assets/icons/coins-solid 1.png', width: 16, height: 16, alt: 'Fees & Charges' };
+        return 'coins-solid 1.png';
       case 'transactions':
-        return { src: '/assets/icons/icon.png', width: 16, height: 18, alt: 'Transactions' };
+        return 'icon.png';
       case 'services':
-        return { src: '/assets/icons/galaxy 1.png', width: 16, height: 16, alt: 'Services' };
+        return 'galaxy 1.png';
       case 'service account':
       case 'service accounts':
-        return { icon: UserCog, width: 16, height: 12.8, alt: 'Service Accounts' };
+        return 'users 1.png';
       case 'settlements':
-        return { src: '/assets/icons/scroll 1.png', width: 16, height: 12.8, alt: 'Settlements' };
+        return 'scroll 1.png';
       case 'reports':
-        return { src: '/assets/icons/chart-bar 2.png', width: 16, height: 16, alt: 'Reports' };
+        return 'chart-bar 2.png';
       case 'preferences':
-        return { src: '/assets/icons/sliders-h 1.png', width: 16, height: 16, alt: 'Preferences' };
+        return 'sliders-h 1.png';
       case 'fees and pricing':
       case 'fees & pricing':
-        return { src: '/assets/icons/badge-percent 1.png', width: 16, height: 16, alt: 'Fees & Pricing' };
+        return 'badge-percent 1.png';
       case 'audit logs':
-        return { icon: ClipboardList, width: 16, height: 21.33, alt: 'Audit Logs' };
+        return 'filter-results-button.png';
       default:
         return null;
     }
   }, [normalizedLabel]);
 
-  if (!config) return null;
+  if (!filename) return null;
 
-  if (config.src) {
-    return (
-      <img
-        src={config.src}
-        alt={config.alt}
-        style={{
-          width: `${config.width}px`,
-          height: `${config.height}px`,
-          objectFit: 'contain',
-          display: 'block'
-        }}
-      />
-    );
+  const url = `https://jrwptnalqevxqenwipvn.supabase.co/storage/v1/object/public/lendsqr-assesement/icon/${encodeURIComponent(filename)}`;
+
+  // Determine standard dimension to preserve exact aspect ratios from original design
+  let width = 16;
+  let height = 16;
+
+  switch (normalizedLabel) {
+    case 'dashboard':
+      width = 16;
+      height = 14.22;
+      break;
+    case 'users':
+    case 'guarantors':
+    case 'whitelist':
+    case 'karma':
+    case 'service account':
+    case 'service accounts':
+    case 'settlements':
+      width = 16;
+      height = 12.8;
+      break;
+    case 'decision models':
+      width = 19;
+      height = 15.2;
+      break;
+    case 'savings':
+      width = 16;
+      height = 14.22;
+      break;
+    case 'loan requests':
+    case 'loan products':
+      width = 18;
+      height = 22;
+      break;
+    case 'transactions':
+      width = 16;
+      height = 18;
+      break;
+    case 'audit logs':
+      width = 16;
+      height = 16;
+      break;
   }
 
-  if (config.icon) {
-    const IconComponent = config.icon;
-    return <IconComponent size={config.width} style={{ width: `${config.width}px`, height: `${config.height}px` }} />;
-  }
-
-  return null;
+  return (
+    <img
+      src={url}
+      alt={label}
+      style={{
+        width: `${width}px`,
+        height: `${height}px`,
+        objectFit: 'contain',
+        display: 'block'
+      }}
+    />
+  );
 };
 
 interface NavItemProps {
@@ -133,13 +193,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, closeSidebar }) => {
       {isOpen && <div className="sidebar-overlay" onClick={closeSidebar} />}
       <aside className={`dashboard-sidebar ${isOpen ? 'open' : ''}`}>
         <div className="mobile-sidebar-header">
-          <X size={24} onClick={closeSidebar} />
+          <XSvg size={24} onClick={closeSidebar} />
         </div>
         
         <div className="switch-org">
           <SidebarIcon label="Switch Organization" />
           <span>Switch Organization</span>
-          <ChevronDown size={14} />
+          <ChevronDownSvg size={14} />
         </div>
 
         <div className="nav-section">

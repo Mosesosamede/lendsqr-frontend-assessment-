@@ -56,6 +56,20 @@ export const api = {
     return response.json();
   },
 
+  async updateUserStatus(id: string, status: string): Promise<User> {
+    const response = await fetch(`${API_BASE}/users/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status }),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to update user status');
+    }
+    return response.json();
+  },
+
   async getStats(): Promise<UserStats> {
     const response = await fetch(`${API_BASE}/stats`);
     if (!response.ok) {

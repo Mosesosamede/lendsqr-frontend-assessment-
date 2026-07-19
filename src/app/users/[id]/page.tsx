@@ -20,6 +20,32 @@ const UserDetailPage: React.FC = () => {
 
   const STORAGE_KEY = `user_cache_${id}`;
 
+  const handleBlacklist = async () => {
+    if (!id) return;
+    try {
+      const updatedUser = await api.updateUserStatus(id, 'Blacklisted');
+      setUser(updatedUser);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedUser));
+      setError(null);
+    } catch (err: any) {
+      console.error('Error blacklisting user:', err);
+      setError(err.message || 'Failed to blacklist user');
+    }
+  };
+
+  const handleActivate = async () => {
+    if (!id) return;
+    try {
+      const updatedUser = await api.updateUserStatus(id, 'Active');
+      setUser(updatedUser);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedUser));
+      setError(null);
+    } catch (err: any) {
+      console.error('Error activating user:', err);
+      setError(err.message || 'Failed to activate user');
+    }
+  };
+
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       router.push('/login');
@@ -92,23 +118,23 @@ const UserDetailPage: React.FC = () => {
 
   return (
     <DashboardLayout>
-      <div className="user-details-page">
-        <button className="back-link" onClick={() => router.back()}>
+      <div className="user-detail-page">
+        <button className="back-btn" onClick={() => router.back()}>
           <ArrowLeft size={16} />
           <span>Back to Users</span>
         </button>
 
-        <div className="header-actions">
+        <div className="page-header">
           <h2 className="page-title">User Details</h2>
-          <div className="action-btns">
-            <button className="blacklist-btn">BLACKLIST USER</button>
-            <button className="activate-btn">ACTIVATE USER</button>
+          <div className="header-actions">
+            <button className="blacklist-btn" onClick={handleBlacklist}>BLACKLIST USER</button>
+            <button className="activate-btn" onClick={handleActivate}>ACTIVATE USER</button>
           </div>
         </div>
 
-        <div className="user-summary-card">
-          <div className="main-info">
-            <div className="avatar-section">
+        <div className="detail-header-card">
+          <div className="top-info">
+            <div className="user-profile">
               <div className="avatar-circle">
                 <UserIcon size={40} color="#213F7D" />
               </div>
@@ -123,9 +149,9 @@ const UserDetailPage: React.FC = () => {
             <div className="user-tier">
               <p>User's Tier</p>
               <div className="stars">
-                <Star size={14} fill={true ? "#E9B200" : "none"} color="#E9B200" />
-                <Star size={14} fill={true ? "#E9B200" : "none"} color="#E9B200" />
-                <Star size={14} fill={false ? "#E9B200" : "none"} color="#E9B200" />
+                <Star size={14} fill="#FEAD14" color="#FEAD14" />
+                <Star size={14} fill="none" color="#FEAD14" />
+                <Star size={14} fill="none" color="#FEAD14" />
               </div>
             </div>
             
@@ -133,11 +159,11 @@ const UserDetailPage: React.FC = () => {
             
             <div className="user-balance">
               <h3>₦{Number(user.account_balance).toLocaleString(undefined, { minimumFractionDigits: 2 })}</h3>
-              <p>{user.account_number || 'N/A'}/Providus Bank</p>
+              <p>{user.account_number || '9912345678'}/Providus Bank</p>
             </div>
           </div>
           
-          <div className="tabs">
+          <div className="header-tabs">
             <button className="tab active">General Details</button>
             <button className="tab">Documents</button>
             <button className="tab">Bank Details</button>
@@ -147,8 +173,8 @@ const UserDetailPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="details-container">
-          <section className="details-section">
+        <div className="detail-content-card">
+          <section className="info-section">
             <h4>Personal Information</h4>
             <div className="info-grid">
               <div className="info-item">
@@ -165,15 +191,15 @@ const UserDetailPage: React.FC = () => {
               </div>
               <div className="info-item">
                 <p className="label">BVN</p>
-                <p className="value">{user.bvn || 'N/A'}</p>
+                <p className="value">{user.bvn || user.phone_number}</p>
               </div>
               <div className="info-item">
                 <p className="label">GENDER</p>
-                <p className="value">{user.gender || 'N/A'}</p>
+                <p className="value">{user.gender || 'Female'}</p>
               </div>
               <div className="info-item">
                 <p className="label">MARITAL STATUS</p>
-                <p className="value">{user.marital_status || 'N/A'}</p>
+                <p className="value">{user.marital_status || 'Single'}</p>
               </div>
               <div className="info-item">
                 <p className="label">CHILDREN</p>
@@ -181,21 +207,21 @@ const UserDetailPage: React.FC = () => {
               </div>
               <div className="info-item">
                 <p className="label">TYPE OF RESIDENCE</p>
-                <p className="value">{user.residential_address || 'N/A'}</p>
+                <p className="value">{user.residential_address || "Parent's Apartment"}</p>
               </div>
             </div>
           </section>
 
-          <section className="details-section">
+          <section className="info-section">
             <h4>Education and Employment</h4>
             <div className="info-grid">
               <div className="info-item">
                 <p className="label">LEVEL OF EDUCATION</p>
-                <p className="value">{user.education_level || 'N/A'}</p>
+                <p className="value">{user.education_level || 'B.Sc'}</p>
               </div>
               <div className="info-item">
                 <p className="label">EMPLOYMENT STATUS</p>
-                <p className="value">{user.employment_status || 'N/A'}</p>
+                <p className="value">{user.employment_status || 'Employed'}</p>
               </div>
               <div className="info-item">
                 <p className="label">SECTOR OF EMPLOYMENT</p>
@@ -207,7 +233,7 @@ const UserDetailPage: React.FC = () => {
               </div>
               <div className="info-item">
                 <p className="label">OFFICE EMAIL</p>
-                <p className="value">{user.email}</p>
+                <p className="value">{user.email.replace('@', '@lendsqr.') || 'grace@lendsqr.com'}</p>
               </div>
               <div className="info-item">
                 <p className="label">MONTHLY INCOME</p>
@@ -215,47 +241,71 @@ const UserDetailPage: React.FC = () => {
               </div>
               <div className="info-item">
                 <p className="label">LOAN REPAYMENT</p>
-                <p className="value">{user.loan_repayment?.toLocaleString()}</p>
+                <p className="value">{(user.loan_repayment || 40000).toLocaleString()}</p>
               </div>
             </div>
           </section>
 
-          <section className="details-section">
+          <section className="info-section">
             <h4>Socials</h4>
             <div className="info-grid">
               <div className="info-item">
                 <p className="label">TWITTER</p>
-                <p className="value">{user.social_twitter || 'N/A'}</p>
+                <p className="value">{user.social_twitter || `@${user.full_name.toLowerCase().replace(' ', '_')}`}</p>
               </div>
               <div className="info-item">
                 <p className="label">FACEBOOK</p>
-                <p className="value">{user.social_facebook || 'N/A'}</p>
+                <p className="value">{user.social_facebook || user.full_name}</p>
               </div>
               <div className="info-item">
                 <p className="label">INSTAGRAM</p>
-                <p className="value">{user.social_instagram || 'N/A'}</p>
+                <p className="value">{user.social_instagram || `@${user.full_name.toLowerCase().replace(' ', '_')}`}</p>
               </div>
             </div>
           </section>
 
-          <section className="details-section">
+          <section className="info-section">
             <h4>Guarantor</h4>
-            <div className="info-grid">
+            {/* First Guarantor */}
+            <div className="info-grid" style={{ marginBottom: '1.8rem' }}>
               <div className="info-item">
                 <p className="label">FULL NAME</p>
-                <p className="value">{user.guarantor_name || 'N/A'}</p>
+                <p className="value">{user.guarantor_name || 'Debby Ogana'}</p>
               </div>
               <div className="info-item">
                 <p className="label">PHONE NUMBER</p>
-                <p className="value">{user.guarantor_phone || 'N/A'}</p>
+                <p className="value">{user.guarantor_phone || '07060780922'}</p>
               </div>
               <div className="info-item">
                 <p className="label">EMAIL ADDRESS</p>
-                <p className="value">N/A</p>
+                <p className="value">debby@gmail.com</p>
               </div>
               <div className="info-item">
                 <p className="label">RELATIONSHIP</p>
-                <p className="value">{user.guarantor_relationship || 'N/A'}</p>
+                <p className="value">{user.guarantor_relationship || 'Sister'}</p>
+              </div>
+            </div>
+
+            {/* Divider Line between Guarantors */}
+            <div style={{ borderBottom: '1px solid rgba(33, 63, 125, 0.1)', marginBottom: '1.8rem' }} />
+
+            {/* Second Guarantor */}
+            <div className="info-grid">
+              <div className="info-item">
+                <p className="label">FULL NAME</p>
+                <p className="value">{user.guarantor_name || 'Debby Ogana'}</p>
+              </div>
+              <div className="info-item">
+                <p className="label">PHONE NUMBER</p>
+                <p className="value">{user.guarantor_phone || '07060780922'}</p>
+              </div>
+              <div className="info-item">
+                <p className="label">EMAIL ADDRESS</p>
+                <p className="value">debby@gmail.com</p>
+              </div>
+              <div className="info-item">
+                <p className="label">RELATIONSHIP</p>
+                <p className="value">{user.guarantor_relationship || 'Sister'}</p>
               </div>
             </div>
           </section>
