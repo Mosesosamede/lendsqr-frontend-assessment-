@@ -55,7 +55,7 @@ const SidebarIcon: React.FC<SidebarIconProps> = ({ label }) => {
       case 'switch organization':
         return 'briefcase 1.png';
       case 'dashboard':
-        return 'home 1.png';
+        return 'home1.png';
       case 'users':
         return 'user-friends 1.png';
       case 'guarantors':

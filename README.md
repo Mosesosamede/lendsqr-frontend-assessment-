@@ -81,7 +81,7 @@ To ensure high responsiveness and zero unnecessary database hits, the user detai
 ```text
 src/
 ├── app/                  # Next.js App Router dynamic paths, API endpoints, and main layouts
-├── assets/               # supabase handles the storing - of the assert
+├── assets/               # Local UI icons, fonts, and brand assets
 ├── components/           # Atomic, reusable components (Button, Input, Layout shells)
 ├── features/             # Feature-scoped logic (Auth flow, user directories, filters)
 ├── lib/                  # Central API client wrappers, utilities, and Supabase client

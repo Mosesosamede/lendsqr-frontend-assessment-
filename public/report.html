@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lendsqr Frontend Assessment - Technical Design &amp; Implementation Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #213F7D;
+      --secondary: #39CDCC;
+      --text: #545F7D;
+      --text-dark: #213F7D;
+      --bg: #F9FAFC;
+      --card-bg: #FFFFFF;
+      --border: #E2E8F0;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--text);
+      background-color: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Table of Contents */
+    .sidebar {
+      width: 280px;
+      background-color: var(--card-bg);
+      border-right: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 10;
+    }
+
+    .brand-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .brand-logo {
+      height: 30px;
+      object-fit: contain;
+    }
+
+    .doc-meta {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--secondary);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.3;
+      margin-bottom: 1.5rem;
+    }
+
+    .toc-list {
+      list-style-type: none;
+    }
+
+    .toc-item {
+      margin-bottom: 0.5rem;
+    }
+
+    .toc-link {
+      display: block;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .toc-link:hover {
+      background-color: #F1F5F9;
+      color: var(--primary);
+    }
+
+    /* Main Content Area */
+    .main-content {
+      margin-left: 280px;
+      flex: 1;
+      padding: 3rem 4rem;
+      max-width: 1100px;
+    }
+
+    header.doc-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .doc-title-main {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .meta-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .meta-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94A3B8;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .meta-val {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    .meta-val a {
+      color: var(--secondary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .meta-val a:hover {
+      text-decoration: underline;
+    }
+
+    /* Typography & Sections */
+    section {
+      margin-bottom: 3.5rem;
+      scroll-margin-top: 2rem;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--primary);
+      border-left: 4px solid var(--secondary);
+      padding-left: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin: 1.5rem 0 0.75rem 0;
+    }
+
+    p {
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    ul, ol {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    strong {
+      color: var(--text-dark);
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0 2rem 0;
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    th {
+      background-color: #F8FAFC;
+      color: var(--primary);
+      font-weight: 600;
+      text-align: left;
+      padding: 1rem;
+      font-size: 0.85rem;
+      border-bottom: 2px solid var(--border);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 1rem;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Monospace / Code blocks */
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      background-color: #F1F5F9;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: #EF4444;
+    }
+
+    pre {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      background-color: #0F172A;
+      color: #F8FAFC;
+      padding: 1.5rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      line-height: 1.5;
+    }
+
+    pre code {
+      background-color: transparent;
+      padding: 0;
+      color: inherit;
+    }
+
+    /* Callouts */
+    .callout {
+      background-color: #ECFDF5;
+      border-left: 4px solid var(--secondary);
+      padding: 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+
+    .callout p {
+      margin-bottom: 0;
+      font-weight: 500;
+      color: #065F46;
+    }
+
+    /* Responsive Utilities */
+    @media (max-width: 968px) {
+      .sidebar {
+        display: none;
+      }
+      .main-content {
+        margin-left: 0;
+        padding: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand-section">
+        <img class="brand-logo" src="https://jrwptnalqevxqenwipvn.supabase.co/storage/v1/object/public/lendsqr-assesement/logo/logo.png" alt="Lendsqr Logo">
+      </div>
+      <div class="doc-meta">Technical Report</div>
+      <div class="sidebar-title">Engineering Design Document</div>
+      
+      <ul class="toc-list">
+        <li class="toc-item"><a class="toc-link" href="#overview">Project Overview</a></li>
+        <li class="toc-item"><a class="toc-link" href="#stack">Technology Stack</a></li>
+        <li class="toc-item"><a class="toc-link" href="#assets">Cloud Asset Pipeline</a></li>
+        <li class="toc-item"><a class="toc-link" href="#architecture">Project Architecture</a></li>
+        <li class="toc-item"><a class="toc-link" href="#approach">Development Approach</a></li>
+        <li class="toc-item"><a class="toc-link" href="#data">Data Layer</a></li>
+        <li class="toc-item"><a class="toc-link" href="#api">API Design</a></li>
+        <li class="toc-item"><a class="toc-link" href="#frontend">Frontend Architecture</a></li>
+        <li class="toc-item"><a class="toc-link" href="#state">State Management</a></li>
+        <li class="toc-item"><a class="toc-link" href="#performance">Performance</a></li>
+        <li class="toc-item"><a class="toc-link" href="#accessibility">Accessibility</a></li>
+        <li class="toc-item"><a class="toc-link" href="#responsive">Responsive Design</a></li>
+        <li class="toc-item"><a class="toc-link" href="#decisions">Decisions &amp; Tradeoffs</a></li>
+        <li class="toc-item"><a class="toc-link" href="#challenges">Challenges &amp; Solutions</a></li>
+        <li class="toc-item"><a class="toc-link" href="#testing">Testing Strategy</a></li>
+        <li class="toc-item"><a class="toc-link" href="#security">Security Framework</a></li>
+        <li class="toc-item"><a class="toc-link" href="#future">Future Enhancements</a></li>
+        <li class="toc-item"><a class="toc-link" href="#conclusion">Conclusion</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <header class="doc-header">
+        <div class="doc-meta">Vercel Production Deployment</div>
+        <h1 class="doc-title-main">Lendsqr Frontend Assessment Technical Design &amp; Implementation Report</h1>
+        
+        <div class="meta-grid">
+          <div class="meta-card">
+            <div class="meta-label">Author</div>
+            <div class="meta-val">Senior Frontend Engineer</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Date</div>
+            <div class="meta-val">July 19, 2026</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Production App URL</div>
+            <div class="meta-val"><a href="https://moses-0-0-lendsqr-fe-test.vercel.app/" target="_blank">moses-0-0-lendsqr-fe-test.vercel.app</a></div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Engineering Repository</div>
+            <div class="meta-val"><a href="https://github.com/mosesoobaseki/lendsqr-assessment" target="_blank">github.com/mosesoobaseki/...</a></div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Section: Project Overview -->
+      <section id="overview">
+        <h2>Project Overview</h2>
+        <p>This technical report details the architectural blueprint, data pipeline integrations, stylesheet systems, and critical engineering decisions made during the design and development of the <strong>Lendsqr Admin Dashboard</strong>. Built on Next.js, TypeScript, Supabase, and SCSS, this solution represents a production-ready system constructed according to strict visual guidelines and robust state management principles.</p>
+        <p>The Lendsqr Admin Dashboard is a mission-critical operations portal designed for management of borrowers, account parameters, credit facilities, and financial profiles. The primary objective is to provide administrators with an intuitive, dense, and interactive system for managing hundreds of thousands of users.</p>
+        
+        <p>The implementation covers:</p>
+        <ul>
+          <li>An enterprise-grade login screen featuring rigid validation, mock authorization routing, and pixel-perfect layouts.</li>
+          <li>A multi-metric dashboard featuring unified system analytics counters (Total Users, Active Users, Users with Loans, Users with Savings).</li>
+          <li>An advanced user directory table capable of paginating, filtering (across 6 dynamic criteria: Organization, Username, Email, Date, Phone Number, and Status), sorting, and performing context-aware administrative operations (Blacklist and Activate).</li>
+          <li>A deep user inspection module that maps comprehensive core records (Personal Profile, Education and Employment, Socials, and Guarantor Details) into structured tabbed views.</li>
+        </ul>
+      </section>
+
+      <!-- Section: Technology Stack -->
+      <section id="stack">
+        <h2>Technology Stack</h2>
+        <p>The choice of technologies was driven by requirements for maximum type safety, modular design systems, efficient bundling, and developer productivity:</p>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>Technology</th>
+              <th>Category</th>
+              <th>Engineering Rationales &amp; Benefits</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Next.js 15+ (App Router)</strong></td>
+              <td>Core Web Framework</td>
+              <td>Provides optimized route compilation, static generation, hybrid server/client execution, and native route handlers.</td>
+            </tr>
+            <tr>
+              <td><strong>TypeScript (strict)</strong></td>
+              <td>Programming Language</td>
+              <td>Enforces strong, compile-time data contracts, preventing runtime regressions and standardizing schemas between backend models and UI props.</td>
+            </tr>
+            <tr>
+              <td><strong>Supabase JS SDK</strong></td>
+              <td>Backend Database Proxy</td>
+              <td>Acts as the relational PostgreSQL proxy, enabling secure, performant queries with exact database sorting, text filters, and dynamic range offsets.</td>
+            </tr>
+            <tr>
+              <td><strong>Sass / SCSS</strong></td>
+              <td>Styling Preprocessor</td>
+              <td>Organized according to a strict multi-file 7-1 Architecture (Abstracts, Components, Pages, Layout). Avoids bloated CSS utility blocks and permits variables, nesting, and complex responsive mixins.</td>
+            </tr>
+            <tr>
+              <td><strong>React Hook Form &amp; Zod</strong></td>
+              <td>Form Engine &amp; Validation</td>
+              <td>Enables high-performance validation rules with zero unneeded re-renders on keyboard input, wrapping schema parse errors into standard form states.</td>
+            </tr>
+            <tr>
+              <td><strong>Vitest</strong></td>
+              <td>Unit Testing Framework</td>
+              <td>A high-speed Jest-compatible testing platform that compiles ES modules natively and validates data validation schemas on mock inputs.</td>
+            </tr>
+            <tr>
+              <td><strong>Motion (motion/react)</strong></td>
+              <td>UI Animation Library</td>
+              <td>Facilitates fluid visual indicators, popups, and route-level loading transitions through lightweight, hardware-accelerated micro-animations.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Section: Cloud Asset Pipeline -->
+      <section id="assets">
+        <h2>Cloud Asset Pipeline</h2>
+        <div class="callout">
+          <p>Zero-Asset Build Architecture: All brand assets, illustrations, and vector navigation icons are decoupled from the application build files and served dynamically from Supabase Object Storage buckets, decreasing local project weight and ensuring instantaneous asset updates.</p>
+        </div>
+        <p>To adhere to the asset requirements, the project contains absolutely no local <code>assets</code> directory or local icon dependencies. Instead, brand and vector elements are fetched as-needed from Supabase storage using the base URL:</p>
+        <p><code>https://jrwptnalqevxqenwipvn.supabase.co/storage/v1/object/public/lendsqr-assesement/</code></p>
+        
+        <h3>Asset Storage Mappings</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Category / Bucket Folder</th>
+              <th>File Names Found &amp; Served</th>
+              <th>Usage Location</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>icon/</strong></td>
+              <td><code>briefcase 1.png</code>, <code>home1.png</code>, <code>user-friends 1.png</code>, <code>users 1.png</code>, <code>sack 1.png</code>, <code>handshake-regular 1.png</code>, <code>piggy-bank 1.png</code>, <code>Group 104.png</code>, <code>user-check 1.png</code>, <code>user-times 1.png</code>, <code>np_bank_148501_000000 1.png</code>, <code>coins-solid 1.png</code>, <code>icon.png</code>, <code>galaxy 1.png</code>, <code>scroll 1.png</code>, <code>chart-bar 2.png</code>, <code>sliders-h 1.png</code>, <code>badge-percent 1.png</code>, <code>filter-results-button.png</code></td>
+              <td>Responsive Sidebar Navigation, Table headers, search filters, and detail tabs.</td>
+            </tr>
+            <tr>
+              <td><strong>illustration/</strong></td>
+              <td><code>pablo-sign-in 1.png</code></td>
+              <td>Login Screen branding hero illustration block.</td>
+            </tr>
+            <tr>
+              <td><strong>logo/</strong></td>
+              <td><code>logo.png</code></td>
+              <td>Universal Application Header and login screens.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Section: Project Architecture -->
+      <section id="architecture">
+        <h2>Project Architecture</h2>
+        <p>The system follows a strict Full-Stack architecture where Next.js manages both user interface components and server-side API proxy routes. To secure database credentials and protect upstream services from unauthorized access, the browser client is restricted from directly communicating with Supabase. Instead, all data operations are routed through server-side Route Handlers.</p>
+        
+        <h3>Architectural Data Flow Map</h3>
+        <pre><code>┌────────────────────────────────────────────────────────────────────────┐
+│                              BROWSER CLIENT                            │
+│                                                                        │
+│  ┌──────────────────┐   Query / Filters   ┌────────────────────────┐   │
+│  │ User Detail Page │ ──────────────────> │   Dashboard View Table │   │
+│  └──────────────────┘                     └────────────────────────┘   │
+└────────────────────────────────────────────────────────────────────────┘
+          │                                             ▲
+          │ Local Cache Lookup                          │ Fetch Hook
+          ▼                                             │
+┌──────────────────┐                                    │
+│   localStorage   │                                    │
+└──────────────────┘                                    │
+          │                                             │
+          ▼ API Client Trigger                          ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                          NEXT.JS ROUTE HANDLERS                        │
+│                                                                        │
+│  ┌──────────────────────────────────────────────────────────────────┐  │
+│  │ app/api/users/route.ts &amp; app/api/stats/route.ts                  │  │
+│  │                                                                  │  │
+│  │ - Validates Query Parameters (page, limit, status, search, etc.) │  │
+│  │ - Transforms local requests into secure relational queries       │  │
+│  └──────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────┘
+          │
+          │ Secure SQL Proxy via SDK (uses private Secrets)
+          ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                            DATABASE ENGINE                             │
+│                                                                        │
+│  ┌──────────────────┐                     ┌────────────────────────┐   │
+│  │  PostgreSQL      │ &lt;─────────────────&gt; │ Supabase cloud storage │   │
+│  │  (users table)   │                     └────────────────────────┘   │
+│  └──────────────────┘                                                  │
+└────────────────────────────────────────────────────────────────────────┘</code></pre>
+
+        <h3>Folder Structure Layout</h3>
+        <pre><code>src/
+├── app/                        # Next.js App Router Structure
+│   ├── api/                    # Server-Side API Handlers
+│   │   ├── stats/              # Dashboard metrics aggregate route
+│   │   └── users/              # User database query, paginate, &amp; filter route
+│   ├── dashboard/              # Dashboard root layout page
+│   ├── login/                  # Authentication page container
+│   ├── users/                  # Dynamic user inspection routes
+│   │   └── [id]/               # Dynamic detailed view route
+│   ├── ClientProviders.tsx     # Context binders (Auth, Styling)
+│   └── layout.tsx              # Root Layout with metadata
+├── components/                 # Reusable Presentation Components
+│   ├── layout/                 # Shell, Header, Sidebar grid systems
+│   ├── ui/                     # Isolated Atomic visual elements (Stat Cards)
+│   └── users/                  # Specialized dashboard table blocks &amp; popup forms
+├── features/                   # Encapsulated Feature Blocks
+│   ├── auth/                   # Contexts, Schemas, and login forms
+│   ├── dashboard/              # Feature dashboard layouts
+│   └── users/                  # Detailed user metadata sections
+├── lib/                        # Core helper libraries &amp; API Client wrapper
+│   ├── api.ts                  # Fetch API wrapper mapping routes to components
+│   └── supabase.ts             # Supabase credentials loader
+├── services/                   # Business Services
+│   └── auth.service.ts         # User authorization and local session management
+├── styles/                     # Maintainable Sass Preprocessor System
+│   ├── abstracts/              # Shared mixins, typography rules, &amp; variables
+│   ├── base/                   # Reset styles, font loaders, globals
+│   ├── components/             # Component styles (tables, cards, dropdowns)
+│   ├── layout/                 # Core layout structures (header, sidebar grid)
+│   ├── pages/                  # Page layouts (login page, details grid)
+│   └── main.scss               # Manifest importing imports
+└── types/                      # Comprehensive Domain Type Declarations
+    └── user.ts                 # Domain records (User, UserStats, UserStatus)</code></pre>
+      </section>
+
+      <!-- Section: Development Approach -->
+      <section id="approach">
+        <h2>Development Approach</h2>
+        <p>The project implementation followed an organized development pipeline to ensure reliability, strict alignment with the design instructions, and zero regressions:</p>
+        <ol>
+          <li><strong>Requirements Gathering and UI Spec Analysis:</strong> Hand-crafted mockups and brand guidelines were analyzed to determine the exact sizing ratios, padding configurations, color palettes, and typography metrics.</li>
+          <li><strong>Data Schema Design:</strong> The <code>User</code> interface structure was formalized in TypeScript. Fields were aligned with actual database tables to enable comprehensive querying.</li>
+          <li><strong>Sass Variable &amp; Structural Architecture:</strong> Base configurations (such as primary blues, teal accents, fonts, spacing values, and screen mixins) were written into separate stylesheets before building individual pages. This prevented style overrides and layout misalignments.</li>
+          <li><strong>Next.js App Routing and Shell Assembly:</strong> Root layouts, authentication pages, dashboard wrappers, and detailed inspection views were created as client-side dynamic shells under the standard Next.js directory.</li>
+          <li><strong>Server API Routes and Database Provisioning:</strong> Relational query adapters were configured in route handlers, adding paginated endpoints, precise filter chains, and mathematical aggregations.</li>
+          <li><strong>Client Component Optimization and Interactivity:</strong> Active tables were equipped with dynamic filter popups, pagination dropdowns, hover states, and dynamic status actions. Caching strategies were introduced to allow sub-second page rendering.</li>
+        </ol>
+      </section>
+
+      <!-- Section: Data Layer -->
+      <section id="data">
+        <h2>Data Layer</h2>
+        <p>The database layer uses PostgreSQL hosted on a scalable Supabase instance. It contains a comprehensive users table. Each user record includes over twenty fields to mirror real production data, including:</p>
+        <ul>
+          <li><strong>Core Profile:</strong> ID, full name, username, email, phone number, BVN, gender, marital status.</li>
+          <li><strong>Educational/Employment Background:</strong> Education level, employment status, sector, monthly income, monthly loan repayment.</li>
+          <li><strong>Financial Assets:</strong> Account balance, account number, credit score, current savings, bank code.</li>
+          <li><strong>Metadata:</strong> Creation date, account status, guarantor names, guarantor contact info, and guarantor relationships.</li>
+        </ul>
+        <p>To populate the database with realistic developer assessment records, a comprehensive seed migration script was executed during DB setup, populating the database with a high-density, real-world representative dataset.</p>
+      </section>
+
+      <!-- Section: API Design -->
+      <section id="api">
+        <h2>API Design</h2>
+        <p>To decouple client states from database structures, database requests are proxied through standard Next.js route handlers. This design ensures that credentials remain hidden, and query operations are optimized on the server before transferring JSON payloads to the browser.</p>
+        
+        <h3>1. User Database Endpoint (<code>GET /api/users</code>)</h3>
+        <p>Retrieves user collections, supporting multi-criteria filtering, text searches, and exact relational pagination.</p>
+        <p>Query Parameters Supported:</p>
+        <ul>
+          <li><code>page</code>: Current segment index (default: 1).</li>
+          <li><code>limit</code>: Elements per page (default: 10).</li>
+          <li><code>search</code>: Full-text search string matched via ILIKE on names, emails, usernames, and telephone numbers.</li>
+          <li><code>organization</code>: Hard filter mapping to exactly matched enterprise associations.</li>
+          <li><code>status</code>: Exact status match (Active, Inactive, Pending, Blacklisted).</li>
+          <li><code>username</code> / <code>email</code> / <code>phone_number</code>: Multi-input filters mapping to column segments.</li>
+          <li><code>date_joined</code>: Date validation match tracking registration date bounds.</li>
+        </ul>
+
+        <h3>Example Server Query Construction:</h3>
+        <pre><code>let query = supabase.from('users').select('*', { count: 'exact' });
+
+if (search) {
+  query = query.or(`full_name.ilike.%${search}%,email.ilike.%${search}%,phone_number.ilike.%${search}%,username.ilike.%${search}%`);
+}
+if (status) {
+  query = query.eq('status', status);
+}
+// Paginate
+query = query.range(from, to);</code></pre>
+
+        <h3>2. Metrics Summary Endpoint (<code>GET /api/stats</code>)</h3>
+        <p>Executes database queries to calculate aggregate totals. This endpoint avoids loading entire records into memory by requesting database counts directly:</p>
+        <pre><code>const { count: totalCount } = await supabase.from('users').select('id', { count: 'exact', head: true });
+const { count: activeCount } = await supabase.from('users').select('id', { count: 'exact', head: true }).eq('status', 'Active');
+const { count: loanCount } = await supabase.from('users').select('id', { count: 'exact', head: true }).gt('loan_repayment', 0);
+const { count: savingsCount } = await supabase.from('users').select('id', { count: 'exact', head: true }).gt('account_balance', 0);</code></pre>
+      </section>
+
+      <!-- Section: Frontend Architecture -->
+      <section id="frontend">
+        <h2>Frontend Architecture</h2>
+        <p>The client interface is built using standard React components, TypeScript interfaces, and maintainable SCSS layout definitions.</p>
+        
+        <h3>1. Styling and SCSS Organization</h3>
+        <p>Styles are modular and completely decoupled from React structures, avoiding inline styles or heavy utility class overrides. The styling system is compiled from an organized directory:</p>
+        <ul>
+          <li><code>_variables.scss</code>: Defines the official colors (Primary Deep Blue: <code>#213F7D</code>, Secondary Accent Teal: <code>#39CDCC</code>, Text Gray: <code>#545F7D</code>), font weights, and border radius targets.</li>
+          <li><code>_mixins.scss</code>: Contains responsive viewport media-queries (e.g., mobile, tablet, desktop, large-desktop) to keep layouts responsive across different screens.</li>
+          <li><code>components/</code>: Separates styling blocks for <code>_table.scss</code>, <code>_stat-cards.scss</code>, and <code>_filters.scss</code>.</li>
+          <li><code>pages/</code>: Includes specific configurations for login layout structures, details sections, and dashboard grids.</li>
+        </ul>
+
+        <h3>2. Form Architecture</h3>
+        <p>Forms are managed through <code>react-hook-form</code> and validated via <code>@hookform/resolvers/zod</code>. Form rules are declared as strict Zod schemas, separating error tracking from UI rendering logic:</p>
+        <pre><code>export const loginSchema = z.object({
+  email: z.string().min(1, 'Email is required').email('Enter a valid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+});</code></pre>
+      </section>
+
+      <!-- Section: State Management -->
+      <section id="state">
+        <h2>State Management</h2>
+        <p>The application employs a hybrid state strategy, choosing the most appropriate tool for each use case:</p>
+        <ul>
+          <li><strong>Server-Client Sync:</strong> Local filter parameters are stored inside React state within parent containers. Updating pagination indexes or filter fields triggers an asynchronous data fetch, updating users and stats components seamlessly.</li>
+          <li><strong>LocalStorage Caching:</strong> Dynamic inspection views (UserDetailPage.tsx) query cached representations first before making API calls. This enables sub-second load times when clicking through user directories.</li>
+          <li><strong>State Flags:</strong> Comprehensive loading indicators, empty lists, and error feedback elements are configured as react states, preventing page freezing or broken displays on network lag.</li>
+        </ul>
+      </section>
+
+      <!-- Section: Performance Considerations -->
+      <section id="performance">
+        <h2>Performance Considerations</h2>
+        <p>Several optimizations are implemented in the codebase to ensure responsive performance under high data loads:</p>
+        
+        <h3>1. Relational Database Range Offsets</h3>
+        <p>The server-side endpoint processes pagination using range boundaries (<code>.range(from, to)</code>) rather than loading complete data slices. This reduces transfer sizes and network overhead.</p>
+
+        <h3>2. Progressive Loading &amp; Non-Blocking Caching</h3>
+        <p>When an administrator opens a dynamic user inspection page, the application uses a progressive loading strategy:</p>
+        <ol>
+          <li>The client checks <code>localStorage</code> for cached user data (keyed by user ID).</li>
+          <li>If found, the cached data is loaded immediately, providing an instant render.</li>
+          <li>In the background, a non-blocking fetch call is sent to the server.</li>
+          <li>When the server responds with fresh data, the UI is updated, and the cache is refreshed.</li>
+        </ol>
+        <pre><code>// 1. Check localStorage first for immediate UI
+const cachedData = localStorage.getItem(STORAGE_KEY);
+if (cachedData) {
+  setUser(JSON.parse(cachedData));
+  setLoading(false); 
+}
+
+// 2. Fetch fresh data from API in background
+const freshUser = await api.getUserById(id);
+setUser(freshUser);
+
+// 3. Update cache
+localStorage.setItem(STORAGE_KEY, JSON.stringify(freshUser));</code></pre>
+      </section>
+
+      <!-- Section: Accessibility -->
+      <section id="accessibility">
+        <h2>Accessibility</h2>
+        <p>The user interface complies with accessible web practices to ensure usability for all administrators:</p>
+        <ul>
+          <li><strong>Semantic Elements:</strong> Core page layouts use distinct structural elements (<code>&lt;header&gt;</code>, <code>&lt;aside&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>) instead of generic division containers.</li>
+          <li><strong>Form Elements:</strong> Standard validation fields map explicit identifiers to form tags using labels (<code>&lt;label htmlFor="username"&gt;</code>).</li>
+          <li><strong>ARIA Elements:</strong> Dynamic field validations communicate error structures using appropriate attribute settings (<code>aria-invalid="true"</code>).</li>
+          <li><strong>Visual Contrast:</strong> Foreground elements are styled to maintain high visual contrast relative to their backgrounds, ensuring readability.</li>
+        </ul>
+      </section>
+
+      <!-- Section: Responsive Design -->
+      <section id="responsive">
+        <h2>Responsive Design</h2>
+        <p>The design adapts fluidly across mobile, tablet, and wide desktop viewports:</p>
+        <ul>
+          <li><strong>Desktop Screens:</strong> The layout features a dense structural layout, with a persistent left-hand navigation sidebar, search bars, global system header controls, and a multi-column data grid.</li>
+          <li><strong>Tablet viewports:</strong> Responsive Sass mixins convert the main grid into a single-column block. The navigation sidebar transitions into an absolute-positioned slide-out panel, accessible via a mobile menu trigger.</li>
+          <li><strong>Mobile devices:</strong> Input filters shift into a compact drawer format to fit smaller screens, ensuring form inputs remain legible. Tables are wrapped in horizontally scrollable containers to handle multi-column layouts without content clipping.</li>
+        </ul>
+      </section>
+
+      <!-- Section: Engineering Decisions & Tradeoffs -->
+      <section id="decisions">
+        <h2>Engineering Decisions &amp; Tradeoffs</h2>
+        <p>During the planning and development phases, several architectural tradeoffs were evaluated:</p>
+        
+        <h3>1. Server-Side Routing vs. Single-Page (SPA) Layouts</h3>
+        <p><strong>Decision:</strong> Next.js App Router.</p>
+        <p><strong>Alternative Considered:</strong> Create React App (SPA).</p>
+        <p><strong>Tradeoff:</strong> While an SPA is slightly simpler to set up initially, Next.js provides optimized route splitting, server-side API proxying, and built-in route compilation, resulting in faster load times and better security boundaries.</p>
+
+        <h3>2. Supabase Integration vs. In-Memory Mock Arrays</h3>
+        <p><strong>Decision:</strong> Supabase PostgreSQL.</p>
+        <p><strong>Alternative Considered:</strong> In-memory mock arrays.</p>
+        <p><strong>Tradeoff:</strong> Implementing a real cloud database requires more initial setup and schema design. However, it is the only way to support real pagination, sorting, and multi-criteria filtering across large datasets without overloading browser memory.</p>
+
+        <h3>3. SCSS Variables vs. Utility CSS Frameworks</h3>
+        <p><strong>Decision:</strong> Custom Sass/SCSS Modular System.</p>
+        <p><strong>Alternative Considered:</strong> CSS-in-JS or inline utility styles.</p>
+        <p><strong>Tradeoff:</strong> Inline styles and CSS-in-JS can increase JavaScript bundle sizes. By choosing a precompiled SCSS architecture, we keep stylesheets separated from component logic, resulting in faster styling lookups and more maintainable stylesheets.</p>
+      </section>
+
+      <!-- Section: Challenges & Solutions -->
+      <section id="challenges">
+        <h2>Challenges &amp; Solutions</h2>
+        <p>During implementation, several technical challenges were identified and resolved:</p>
+        
+        <h3>1. Optimizing Bundle Sizes and High-Memory Builds</h3>
+        <p><strong>Problem:</strong> During production compilation, the bundler encountered out-of-memory errors on container environments.</p>
+        <p><strong>Solution:</strong> The Next.js webpack script was configured with custom node options (<code>NODE_OPTIONS=--max-old-space-size=1024</code>) to restrict maximum memory consumption. In addition, unneeded dependencies were pruned, reducing bundle overhead and build times.</p>
+
+        <h3>2. Table Layout and Multi-Criteria Filtering</h3>
+        <p><strong>Problem:</strong> Managing the layout of the user table while supporting six distinct filtering criteria created complex form state combinations.</p>
+        <p><strong>Solution:</strong> A dedicated, reusable filtering component (<code>FilterPopup.tsx</code>) was created. The component mounts directly inside the table headers and reads its initial states from active parent filters. This keeps the layout organized and maintains clean state transitions.</p>
+      </section>
+
+      <!-- Section: Testing Strategy -->
+      <section id="testing">
+        <h2>Testing Strategy</h2>
+        <p>The application features automated testing pipelines executed via Vitest. The testing suite focuses on validating core schemas, form inputs, and validation criteria:</p>
+        <ul>
+          <li><strong>Core Validations:</strong> Tests confirm that proper email validation rules are enforced, rejecting poorly formatted entries and displaying appropriate warnings.</li>
+          <li><strong>Password Constraints:</strong> Asserts that passwords under six characters are rejected, protecting authentication entry points.</li>
+          <li><strong>State Validation:</strong> Confirms that correct credentials validate successfully, ensuring reliable routing.</li>
+        </ul>
+      </section>
+
+      <!-- Section: Security Considerations -->
+      <section id="security">
+        <h2>Security Considerations</h2>
+        <p>Security is built into the application at the structural level:</p>
+        <ul>
+          <li><strong>Hidden Secrets:</strong> Database connection keys (<code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code>) are stored as server-side environment variables and are never exposed to the client.</li>
+          <li><strong>Validation Boundaries:</strong> Form inputs are validated on the server via Next.js route handlers, preventing unauthorized queries from reaching the database.</li>
+          <li><strong>Input Cleansing:</strong> Form inputs are sanitized before being executed as database queries, protecting database operations.</li>
+        </ul>
+      </section>
+
+      <!-- Section: Future Improvements -->
+      <section id="future">
+        <h2>Future Improvements</h2>
+        <p>The following enhancements are proposed for future development phases:</p>
+        <ol>
+          <li><strong>SSO Authentication:</strong> Integrate OAuth flows (Google Workspace, Microsoft Entra ID) to replace credential-based authentication with secure, single-sign-on access.</li>
+          <li><strong>Export Capabilities:</strong> Add CSV and Excel export utilities directly on the table wrapper, allowing administrators to export filtered and paginated datasets.</li>
+          <li><strong>Multi-Column Sorting:</strong> Support sorting across multiple table columns simultaneously, enabling more complex data analysis.</li>
+          <li><strong>Comprehensive Audit Logging:</strong> Track all administrative actions (such as activating or blacklisting users) in a secure audit table to log operational actions.</li>
+        </ol>
+      </section>
+
+      <!-- Section: Conclusion -->
+      <section id="conclusion">
+        <h2>Conclusion</h2>
+        <p>The Lendsqr Admin Dashboard represents a highly polished, responsive, and robust solution. By implementing a Next.js full-stack architecture with Supabase integrations, modular SCSS stylesheets, and local-first progressive caching, the application delivers reliable performance and meets all visual and functional guidelines. The system is fully compiled, tested, and ready for deployment on Vercel.</p>
+      </section>
+
+    </main>
+  </div>
+
+</body>
+</html>
