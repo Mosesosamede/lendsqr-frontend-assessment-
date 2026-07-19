@@ -13,8 +13,8 @@ const nextConfig = {
     memoryBasedWorkersCount: true
   },
   allowedDevOrigins: [
-    'ais-dev-vaqqeg7mzzpql57z5mtq2r-406872955515.europe-west2.run.app',
-    'ais-pre-vaqqeg7mzzpql57z5mtq2r-406872955515.europe-west2.run.app'
+    'https://moses-0-0-lendsqr-fe-test.vercel.app/',
+    'https://moses-0-0-lendsqr-fe-test.vercel.app/'
   ],
 };
 
