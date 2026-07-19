@@ -9,7 +9,7 @@ A high-fidelity, pixel-perfect fintech platform dashboard designed with absolute
 To match the high-fidelity design specifications exactly of the  official assets. Alignment properties are styled down to sub-pixel coordinates to preserve design-system integrity.
 
 ### 1. Login Page Logo Alignment
-* **Asset**: `/assets/logos/logo.png`
+* **Asset**: `public/lendsqr-assesement/logo/logo.png` (Supabase storage bucket)
 * **Layout Paradigm**: Absolute containment within the left illustration viewport.
 * **CSS Specifications**:
   ```scss
@@ -23,7 +23,7 @@ To match the high-fidelity design specifications exactly of the  official assets
   ```
 
 ### 2. Navigation Header Logo Alignment
-* **Asset**: `/assets/logos/logo.png`
+* **Asset**: `public/lendsqr-assesement/logo/logo.png` (Supabase storage bucket)
 * **Layout Paradigm**: Absolute containment for desktop displays with an adaptive responsive fallback using media queries for touch devices.
 * **CSS Specifications**:
   ```scss
@@ -37,7 +37,7 @@ To match the high-fidelity design specifications exactly of the  official assets
   ```
 
 ### 3. Hero Auth Illustration
-* **Asset**: `supabse bucket lendsqr-assesement/illustrations/pablo-sign-in 1.png`
+* **Asset**: `public/lendsqr-assesement/illustration/pablo-sign-in%201.png` (Supabase storage bucket)
 * **Layout Paradigm**: Flex-centered with a customized aspect ratio, fitting seamlessly alongside the auth input form.
 
 ---
@@ -73,8 +73,7 @@ Rather than cluttering components with inline tailwind classes, the branding lay
 src/
 ├── app/                  # Next.js App Router endpoints, API routes, and page layouts
 ├── assets/               # Branding assets, illustrations, and vector icons
-│   ├── logos/            # Official corporate logos (e.g., logo.png)
-│   └── illustrations/    # Auth and empty state illustrations
+│   ├── icon/            # Official corporate c rank made prttecting tthe (e.g., logo.png)
 ├── components/           # Reusable atomic UI components (Button, Input, Layouts)
 ├── features/             # Feature-scoped modules (Auth state, User directories, Profile views)
 ├── services/             # Stateless helper modules, API abstractions, and AuthService

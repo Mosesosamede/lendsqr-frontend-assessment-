@@ -10,8 +10,8 @@ import { authService } from '../../services/auth.service';
 import { useAuth } from '../../features/auth/AuthContext';
 
 // Assets
-const logo = '/assets/logos/logo.png';
-const illustration = '/assets/illustrations/pablo-sign-in 1.png';
+const logo = 'https://jrwptnalqevxqenwipvn.supabase.co/storage/v1/object/public/lendsqr-assesement/logo/logo.png';
+const illustration = 'https://jrwptnalqevxqenwipvn.supabase.co/storage/v1/object/public/lendsqr-assesement/illustration/pablo-sign-in%201.png';
 
 const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);

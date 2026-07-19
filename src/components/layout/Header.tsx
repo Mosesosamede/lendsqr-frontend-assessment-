@@ -6,7 +6,7 @@
 import React from 'react';
 import { Search, Bell, ChevronDown, Menu } from 'lucide-react';
 
-const logo = '/assets/logos/logo.png';
+const logo = 'https://jrwptnalqevxqenwipvn.supabase.co/storage/v1/object/public/lendsqr-assesement/logo/logo.png';
 
 interface HeaderProps {
   toggleSidebar: () => void;
